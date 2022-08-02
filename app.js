@@ -11,7 +11,11 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://nsfw-checker.vercel.app"],
+    origin: [
+      "http://localhost:3000",
+      "https://nsfw-checker.vercel.app",
+      "nsfw-checker-api.herokuapp.com",
+    ],
   })
 );
 app.use(logger("dev"));
