@@ -3,7 +3,6 @@ const router = express.Router();
 const snoowrap = require("snoowrap");
 
 router.post("/", async (req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
   const { username } = req.body;
   if (!username) return res.send({ error: true });
 
