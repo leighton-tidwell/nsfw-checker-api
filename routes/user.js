@@ -4,7 +4,8 @@ const snoowrap = require("snoowrap");
 
 router.post("/", async (req, res, next) => {
   const { username } = req.body;
-  if (!username) return res.send({ error: true });
+  if (!username)
+    return res.status(400).send({ message: "A username is required!" });
 
   const r = new snoowrap({
     userAgent: "web:nsfwchecker.com:v1 (by /u/bloodoodoo)",
