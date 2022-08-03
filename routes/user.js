@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const snoowrap = require("snoowrap");
+require("dotenv").config();
 
 router.post("/", async (req, res, next) => {
   const { username } = req.body;
@@ -8,12 +9,10 @@ router.post("/", async (req, res, next) => {
     return res.status(400).send({ message: "A username is required!" });
 
   const r = new snoowrap({
-    userAgent: "web:nsfwchecker.com:v1 (by /u/bloodoodoo)",
-    clientId: "cDoiOkedsFQasc0IO5yRUA",
-    clientSecret: "Eg7uGQgK0Iv4aFKBFk_aqV4aEV4Z7w",
-    // refreshToken: "369167690416-CJ_AsQmXhKHgznKmhfYrsRxhhgcLuA",
-    refreshToken: "369167690416-lO0A1j6W62ZrxtcvWn2J4CXlQ9rwIA",
-    // accessToken: "369167690416-zw_m8k_pNI9gBTMoFF7kxwrjiZB0fw",
+    userAgent: process.env.USER_AGENT,
+    clientId: process.env.CLIENT_ID,
+    clientSecret: process.env.CLIENT_SECRET,
+    refreshToken: process.env.REFRESH_TOKEN,
   });
 
   const userData = await r.getUser(username);

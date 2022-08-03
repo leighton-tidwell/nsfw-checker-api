@@ -14,7 +14,7 @@ app.use(
     origin: [
       "http://localhost:3000",
       "https://nsfw-checker.vercel.app",
-      "nsfw-checker-api.herokuapp.com",
+      "nsfw-checker.vercel.app",
     ],
   })
 );
