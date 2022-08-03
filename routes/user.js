@@ -13,6 +13,7 @@ router.post("/", async (req, res, next) => {
     clientId: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
     refreshToken: process.env.REFRESH_TOKEN,
+    accessToken: process.env.ACCESS_TOKEN,
   });
 
   const userData = await r.getUser(username);
