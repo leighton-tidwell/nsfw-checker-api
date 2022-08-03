@@ -9,13 +9,21 @@ const userRouter = require("./routes/user");
 
 const app = express();
 
+const whitelist = [
+  "http://localhost:3000",
+  "https://nsfw-checker.vercel.app",
+  "nsfw-checker.vercel.app",
+];
+
 app.use(
   cors({
-    origin: [
-      "http://localhost:3000",
-      "https://nsfw-checker.vercel.app",
-      "nsfw-checker.vercel.app",
-    ],
+    origin: function (origin, callback) {
+      if (whitelist.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
   })
 );
 app.use(logger("dev"));
