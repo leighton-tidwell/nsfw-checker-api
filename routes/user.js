@@ -17,8 +17,47 @@ router.post("/", async (req, res, next) => {
 
   const userData = await r.getUser(username);
   const userPosts = await userData.getSubmissions({ limit: Infinity });
+  const nonDuplicateMedia = [];
 
-  const nsfwPosts = userPosts.filter((post) => post.over_18 === true);
+  const nsfwPosts = userPosts
+    .filter((post) => post.over_18 === true)
+    .filter((post) => {
+      // embed
+      if (post?.secure_media_embed?.content) {
+        const embedLink =
+          post.secure_media_embed.content.match(/(?<=src=")(.*?)(?=")/g)[0];
+        if (nonDuplicateMedia.includes(embedLink)) return false;
+
+        nonDuplicateMedia.push(embedLink);
+        return true;
+      }
+
+      // images
+
+      let exist = false;
+      post?.preview?.images.map((image) => {
+        if (exist) return null;
+
+        if (image?.variants?.mp4?.source?.url && !image?.variants?.gif) {
+          if (nonDuplicateMedia.includes(image?.variants?.mp4?.source.url))
+            return (exist = true);
+          nonDuplicateMedia.push(image?.variants?.mp4?.source.url);
+        } else {
+          if (
+            nonDuplicateMedia.includes(
+              image?.variants?.gif?.source?.url ?? image?.source?.url
+            )
+          )
+            return (exist = true);
+          nonDuplicateMedia.push(
+            image?.variants?.gif?.source?.url ?? image?.source?.url
+          );
+        }
+      });
+
+      return !exist;
+    });
+
   const sfwPosts = userPosts.filter((post) => post.over_18 !== true);
   const percentage = (100 * nsfwPosts.length) / userPosts.length;
   const subredditPostPercentage = [];
